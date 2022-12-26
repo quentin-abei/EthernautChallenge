@@ -3,29 +3,27 @@ const hre = require("hardhat");
 require("dotenv").config();
 
 async function main() {
-  const contractAddress = "0x2356C46B99137BFc1a46D148096B4FEABC0614e8";
+  const contractAddress = "0x5cf3B9437b6907E352aF6d21e3271Ca1Ac893E12";
+  const hack = await hre.ethers.getContractFactory("HackForce");
+  const Hack = await hack.deploy(contractAddress, {
+    value: ethers.utils.parseEther("0.001"),
+  });
+  await Hack.deployed();
+
+  console.log("HackForce successfull!, address of HackForce: ", Hack.address);
+
   const provider = new ethers.providers.JsonRpcProvider(
     process.env.ALCHEMY_URL
   );
   const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
-
-  const vault = await hre.ethers.getContractAt(
-    "Vault",
-    contractAddress,
-    wallet
-  );
-
-  const unlock = await vault.unlock(
-    "0x412076657279207374726f6e67207365637265742070617373776f7264203a29"
-  );
-
-  console.log("Hack successfull!: ", unlock.hash);
 
   /* const force = await hre.ethers.getContractAt(
     "Force",
     contractAddress,
     wallet
   );*/
+  const balance = await ethers.provider.getBalance(contractAddress);
+  console.log(balance);
   //
 }
 
